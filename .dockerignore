@@ -1,0 +1,8 @@
+.vscode
+build
+Dockerfile
+.idea
+.git
+.gitignore
+Makefile
+README.md
