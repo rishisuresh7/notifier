@@ -8,7 +8,11 @@ import (
 )
 
 type Config struct {
+	SMSApiKey    string
 	RedisConfig  *redisConfig
+
+	EmailUsername string
+	EmailPassword string
 }
 
 func NewConfig() (*Config, error) {
@@ -28,6 +32,20 @@ func getConfigFromEnv() (*Config, []string, error) {
 	var missing []string
 
 	redisConfig := newRedisConfig(&missing)
+	smsApiKey, found := getEnv("SMS_API_KEY")
+	if !found {
+		missing = append(missing, "SMS_API_KEY")
+	}
+
+	emailUsername, found := getEnv("EMAIL_USERNAME")
+	if !found {
+		missing = append(missing, "EMAIL_USERNAME")
+	}
+
+	emailPassword, found := getEnv("EMAIL_PASSWORD")
+	if !found {
+		missing = append(missing, "EMAIL_PASSWORD")
+	}
 
 	if len(missing) > 0 {
 		return nil, missing, nil
@@ -47,7 +65,10 @@ func getConfigFromEnv() (*Config, []string, error) {
 	redisConfig.Database = redisDatabase
 
 	return &Config{
+		SMSApiKey: smsApiKey,
 		RedisConfig:  redisConfig,
+		EmailPassword: emailPassword,
+		EmailUsername: emailUsername,
 	}, nil, nil
 }
 
